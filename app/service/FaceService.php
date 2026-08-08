@@ -3,7 +3,7 @@
 require_once APP_PATH.'/service/Channel/ChannelInterface.php';
 require_once APP_PATH.'/service/Channel/TencentHuiyanChannel.php';
 require_once APP_PATH.'/service/Channel/BaiduFaceChannel.php';
-require_once APP_PATH.'/service/Channel/LocalDemoChannel.php';
+require_once APP_PATH.'/service/Channel/LocalChannel.php';
 
 class FaceService {
     private array $channels=[];
@@ -11,7 +11,7 @@ class FaceService {
 
     public function __construct() {
         $this->loadChannels();
-        $this->defaultChannel=$this->channels['local']??new LocalDemoChannel();
+        $this->defaultChannel=$this->channels['local']??new LocalChannel();
     }
 
     private function loadChannels():void {
@@ -21,11 +21,11 @@ class FaceService {
                 switch($c['provider']){
                     case 'tencent':$this->channels['tencent']=new TencentHuiyanChannel();break;
                     case 'baidu':$this->channels['baidu']=new BaiduFaceChannel();break;
-                    case 'local':$this->channels['local']=new LocalDemoChannel();break;
+                    case 'local':$this->channels['local']=new LocalChannel();break;
                 }
             }
         }catch(Exception $e){}
-        if(!isset($this->channels['local'])) $this->channels['local']=new LocalDemoChannel();
+        if(!isset($this->channels['local'])) $this->channels['local']=new LocalChannel();
     }
 
     public function detect(string $image,?string $channel=null):array {
