@@ -1,0 +1,35 @@
+# Apache 重写规则 - 森码云实人认证系统
+Options -Indexes +FollowSymLinks
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteBase /
+# 强制HTTPS
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+# 禁止访问敏感目录
+RewriteRule ^(app|config|database|tests|resources)/ - [F,L]
+# API请求
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^api/(.*)$ index.php?api=$1 [QSA,L]
+# 管理后台
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^admin(/.*)?$ index.php?admin=1 [QSA,L]
+# 安装向导
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^install(/.*)?$ index.php?install=1 [QSA,L]
+# 前端SPA
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [QSA,L]
+</IfModule>
+# 安全头
+<IfModule mod_headers.c>
+Header always set X-Frame-Options "SAMEORIGIN"
+Header always set X-Content-Type-Options "nosniff"
+Header always set Referrer-Policy "strict-origin-when-cross-origin"
+Header always set Permissions-Policy "camera=(self), microphone=(self)"
+</IfModule>
+# 禁止访问敏感文件
+<FilesMatch "\.(env|lock|sql|log|md)$">Deny from all</FilesMatch>
+AddDefaultCharset UTF-8

@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /install/
+Disallow: /api/
+Sitemap: https://face.builds.codes/sitemap.xml

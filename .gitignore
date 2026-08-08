@@ -1,0 +1,7 @@
+vendor/
+node_modules/
+public/uploads/
+*.log
+.env
+install.lock
+public/dist/
